@@ -26,6 +26,23 @@ Wallpaper Engine 的 **PKG / MPKG 解包** 与 **TEX 转图片** 图形界面。
 
 ---
 
+## 界面预览
+
+解包完成后的主界面。输入 `431960/3132017530`，输出文件夹自动取了 `project.json` 里的壁纸名：
+
+![主界面](docs/screenshot-main.png)
+
+<details>
+<summary>设置页 / 关于页</summary>
+
+![设置](docs/screenshot-settings.png)
+
+![关于](docs/screenshot-about.png)
+
+</details>
+
+---
+
 ## 1. 目录结构
 
 ```

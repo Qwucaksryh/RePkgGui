@@ -52,9 +52,6 @@ public sealed class MainViewModel : ObservableObject
         OpenOutputDirectoryCommand = new RelayCommand(OpenOutputDirectory);
     }
 
-    /// <summary>请求弹出 Snackbar 提示（由 View 显示）。</summary>
-    public event EventHandler<string>? ToastRequested;
-
     public RelayCommand StartOrCancelCommand { get; }
     public RelayCommand PasteCommand { get; }
     public RelayCommand CycleThemeCommand { get; }
@@ -353,7 +350,6 @@ public sealed class MainViewModel : ObservableObject
 
             SetInput(path);
             ShowInfo(InfoBarSeverity.Success, "已粘贴路径", path);
-            ToastRequested?.Invoke(this, "已从剪贴板粘贴路径");
         }
         catch (Exception ex)
         {
@@ -393,10 +389,10 @@ public sealed class MainViewModel : ObservableObject
             _ => AppThemeMode.System
         };
 
-        ApplyTheme(next, persist: true, notify: true);
+        ApplyTheme(next, persist: true);
     }
 
-    public void ApplyTheme(AppThemeMode mode, bool persist, bool notify)
+    public void ApplyTheme(AppThemeMode mode, bool persist)
     {
         AppThemeMode = mode;
         ThemeService.Apply(mode);
@@ -408,9 +404,6 @@ public sealed class MainViewModel : ObservableObject
             settings.Theme = mode;
             _settings.Save(settings);
         }
-
-        if (notify)
-            ToastRequested?.Invoke(this, $"主题已切换为「{ThemeModeName(mode)}」");
     }
 
     public static string ThemeModeName(AppThemeMode mode) => mode switch
@@ -535,7 +528,6 @@ public sealed class MainViewModel : ObservableObject
                     $"已处理 {summary.Packages} 个包，导出 {summary.Files} 个文件（其中 {summary.Textures} 张图片）" +
                     $"{BuildSkippedSummary(summary, "，")}。" +
                     $"输出目录：{summary.OutputRoot}");
-                ToastRequested?.Invoke(this, "提取完成");
 
                 if (_settings.Current.OpenOutputWhenDone)
                     OpenOutputFolder();

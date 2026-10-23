@@ -26,7 +26,6 @@ public partial class MainWindow
 
         DataContext = _viewModel;
 
-        _viewModel.ToastRequested += OnToastRequested;
         _viewModel.Logs.CollectionChanged += OnLogsChanged;
 
         FitSizeToWorkArea();
@@ -78,7 +77,6 @@ public partial class MainWindow
 
     private void OnWindowClosed(object? sender, EventArgs e)
     {
-        _viewModel.ToastRequested -= OnToastRequested;
         _viewModel.Logs.CollectionChanged -= OnLogsChanged;
     }
 
@@ -119,7 +117,7 @@ public partial class MainWindow
     {
         var settings = SettingsService.Instance.Current;
         _viewModel.OutputDirectory = settings.OutputDirectory;
-        _viewModel.ApplyTheme(settings.Theme, persist: false, notify: false);
+        _viewModel.ApplyTheme(settings.Theme, persist: false);
     }
 
     // ------------------------------------------------------------ 选择输入
@@ -256,23 +254,4 @@ public partial class MainWindow
     }
 
     // ------------------------------------------------------------ 提示
-
-    private void OnToastRequested(object? sender, string message)
-    {
-        try
-        {
-            var snackbar = new Snackbar(SnackbarHost)
-            {
-                Title = message,
-                Timeout = TimeSpan.FromSeconds(2.2),
-                IsCloseButtonEnabled = false
-            };
-
-            snackbar.Show();
-        }
-        catch
-        {
-            // Snackbar 属于增强提示，失败可忽略
-        }
-    }
 }
