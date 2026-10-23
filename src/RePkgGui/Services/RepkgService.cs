@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Text.Json;
 using RePKG.Application.Package;
 using RePKG.Application.Texture;
 using RePKG.Core.Package;
@@ -296,14 +295,13 @@ public sealed class RepkgService
     {
         var weight = Math.Max(item.Size, 1);
         var fileName = System.IO.Path.GetFileName(item.Path);
-        var baseFolderName = ResolvePackageFolderName(item.Path, out var nameSource);
+        var baseFolderName = SanitizeName(System.IO.Path.GetFileNameWithoutExtension(item.Path));
         var folderName = ctx.Options.UniquePackageFolder
             ? MakeUniqueName(baseFolderName, usedNames)
             : baseFolderName;
         var destination = System.IO.Path.Combine(outputRoot, folderName);
 
         ctx.Info($"▶ 解析 {fileName}");
-        ctx.Info($"   输出文件夹：{folderName}\\（{nameSource}）");
         ctx.Report($"{fileName}", force: true);
 
         try
@@ -710,116 +708,6 @@ public sealed class RepkgService
             throw new IOException("条目路径越出输出目录，已拒绝写入");
 
         return combined;
-    }
-
-    /// <summary>
-    /// 输出文件夹名：优先用 project.json 的标题（壁纸名称）。
-    /// 同级没有就向上找一层，并用 project.json 的 file 字段校验是否属于当前包。
-    /// 拿不到标题时回退包文件名，并把原因从 source 带出去。
-    /// </summary>
-    private static string ResolvePackageFolderName(string packagePath, out string source)
-    {
-        var directory = System.IO.Path.GetDirectoryName(packagePath);
-        var packageFileName = System.IO.Path.GetFileName(packagePath);
-        var projectSeen = false;
-        var failure = string.Empty;
-
-        foreach (var candidate in new[] { directory, directory == null ? null : System.IO.Path.GetDirectoryName(directory) })
-        {
-            if (string.IsNullOrEmpty(candidate))
-                continue;
-
-            var projectFile = System.IO.Path.Combine(candidate, "project.json");
-            if (!File.Exists(projectFile))
-                continue;
-
-            projectSeen = true;
-            var (title, error) = ReadProjectTitle(projectFile, packageFileName);
-
-            if (title != null)
-            {
-                var safe = SanitizeName(title);
-                if (safe.Length > 0 && safe != "output")
-                {
-                    source = "来自 project.json 的标题";
-                    return safe;
-                }
-            }
-
-            if (error.Length > 0 && failure.Length == 0)
-                failure = error;
-        }
-
-        source = !projectSeen
-            ? "靠近的目录里没有 project.json，用包文件名"
-            : failure.Length > 0
-                ? $"{failure}，用包文件名"
-                : "project.json 的 title 为空，用包文件名";
-
-        return SanitizeName(System.IO.Path.GetFileNameWithoutExtension(packagePath));
-    }
-
-    /// <summary>
-    /// 从一个 project.json 里取壁纸标题。
-    /// 字段名不区分大小写，容忍尾逗号与注释；解析失败时把原因写进 error。
-    /// </summary>
-    private static (string? Title, string Error) ReadProjectTitle(string projectFile, string packageFileName)
-    {
-        try
-        {
-            using var document = JsonDocument.Parse(File.ReadAllText(projectFile), new JsonDocumentOptions
-            {
-                AllowTrailingCommas = true,
-                CommentHandling = JsonCommentHandling.Skip
-            });
-
-            if (document.RootElement.ValueKind != JsonValueKind.Object)
-                return (null, "project.json 顶层不是对象");
-
-            // file 字段校验：避免把旁边另一个壁纸的名字套上来
-            if (TryGetProperty(document.RootElement, "file", out var fileElement)
-                && fileElement.ValueKind == JsonValueKind.String)
-            {
-                var declared = System.IO.Path.GetFileName(fileElement.GetString() ?? string.Empty);
-                if (declared.Length > 0
-                    && !declared.Equals(packageFileName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return (null, $"project.json 指向 {declared}，与当前包不匹配");
-                }
-            }
-
-            if (!TryGetProperty(document.RootElement, "title", out var titleElement))
-                return (null, "project.json 里没有 title 字段");
-
-            if (titleElement.ValueKind != JsonValueKind.String)
-                return (null, $"project.json 的 title 不是字符串");
-
-            var title = titleElement.GetString();
-            return string.IsNullOrWhiteSpace(title) ? (null, string.Empty) : (title, string.Empty);
-        }
-        catch (JsonException ex)
-        {
-            return (null, $"project.json 格式有误（{ex.Message}）");
-        }
-        catch (Exception ex)
-        {
-            return (null, $"project.json 读取失败（{ex.Message}）");
-        }
-    }
-
-    private static bool TryGetProperty(JsonElement element, string name, out JsonElement value)
-    {
-        foreach (var property in element.EnumerateObject())
-        {
-            if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
-            {
-                value = property.Value;
-                return true;
-            }
-        }
-
-        value = default;
-        return false;
     }
 
     private static string SanitizeName(string name)

@@ -48,12 +48,12 @@ internal static class Program
         // ---------- 断言 ----------
         Check("1 个 PKG + 1 个 MPKG 被识别", summary.Packages == 2, $"实际 {summary.Packages}");
 
-        const string sceneFolder = "星空动态壁纸";
+        const string sceneFolder = "scene";
         var sceneDir = Path.Combine(output, sceneFolder);
         var dlcDir = Path.Combine(output, "dlc");
 
         Check("有 project.json 时按壁纸标题命名文件夹", Directory.Exists(sceneDir));
-        Check("无 project.json 时回退到包文件名", Directory.Exists(dlcDir), dlcDir);
+        Check("MPKG 同样按包文件名建目录", Directory.Exists(dlcDir), dlcDir);
 
         var rgbaPng = Path.Combine(sceneDir, "materials", "tex_rgba.png");
         CheckPng(rgbaPng, 8, 8, "RGBA8888 → png（8x8）");
@@ -183,20 +183,6 @@ internal static class Program
         Check("仅媒体：跳过 json", !File.Exists(Path.Combine(mediaOutput, sceneFolder, "data", "config.json")));
         Check("仅媒体：跳过转换失败的 tex", !File.Exists(Path.Combine(mediaOutput, sceneFolder, "materials", "tex_broken.tex")));
         Check("仅媒体：图片计数不变", mediaRun.Textures == 6, $"实际 {mediaRun.Textures}");
-
-        // ---------- 命名：title 为空时回退 ----------
-        var emptyTitleRoot = Path.Combine(root, "emptytitle");
-        Directory.CreateDirectory(emptyTitleRoot);
-        File.WriteAllText(Path.Combine(emptyTitleRoot, "project.json"), "{\"title\":\"\",\"type\":\"scene\"}");
-        File.Copy(Path.Combine(input, "scene.pkg"), Path.Combine(emptyTitleRoot, "3132017530.pkg"));
-
-        var emptyTitleOutput = Path.Combine(root, "output-emptytitle");
-        await service.ExtractAsync(Path.Combine(emptyTitleRoot, "3132017530.pkg"),
-            new RepkgOptions { OutputDirectory = emptyTitleOutput },
-            null, log, CancellationToken.None);
-
-        Check("title 为空时回退到包文件名",
-            Directory.Exists(Path.Combine(emptyTitleOutput, "3132017530")));
 
         Console.WriteLine(new string('-', 70));
 
