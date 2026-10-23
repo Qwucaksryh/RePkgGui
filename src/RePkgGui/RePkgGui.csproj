@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>RePkgGui</AssemblyName>
+        <RootNamespace>RePkgGui</RootNamespace>
+        <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <Version>1.0.0</Version>
+        <Company>RePKG GUI</Company>
+        <Product>RePKG 提取工具</Product>
+        <AssemblyTitle>RePKG 提取工具</AssemblyTitle>
+        <Description>Wallpaper Engine PKG/MPKG 解包与 TEX 转图片的图形界面</Description>
+        <NeutralLanguage>zh-CN</NeutralLanguage>
+        <SatelliteResourceLanguages>zh-Hans;en</SatelliteResourceLanguages>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <DebugType>embedded</DebugType>
+        <!-- 单文件发布时不要把被引用工程的 pdb/xml 拷到产物目录 -->
+        <AllowedReferenceRelatedFileExtensions>none</AllowedReferenceRelatedFileExtensions>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- WPF 的隐式 using 会引入 System.Windows.Shapes，与 System.IO.Path 冲突，移除之（XAML 中仍可正常使用图形） -->
+        <Using Remove="System.Windows.Shapes" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="WPF-UI" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\lib\RePKG.Core\RePKG.Core.csproj" />
+        <ProjectReference Include="..\..\lib\RePKG.Application\RePKG.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Assets\app.ico" />
+    </ItemGroup>
+
+</Project>

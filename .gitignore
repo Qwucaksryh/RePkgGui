@@ -1,0 +1,21 @@
+# 构建产物
+bin/
+obj/
+publish/
+publish-out/
+*.user
+*.suo
+
+# 编辑器
+.vs/
+.idea/
+.vscode/
+
+# 系统
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# 临时
+*.log
+*.tmp

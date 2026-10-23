@@ -1,0 +1,216 @@
+<ui:FluentWindow x:Class="RePkgGui.Views.AboutWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="关于"
+                 Width="540"
+                 Height="572"
+                 ResizeMode="NoResize"
+                 WindowStartupLocation="CenterOwner"
+                 ShowInTaskbar="False"
+                 WindowBackdropType="Mica"
+                 WindowCornerPreference="Round"
+                 ExtendsContentIntoTitleBar="True"
+                 Background="{DynamicResource ApplicationBackgroundBrush}"
+                 FontFamily="Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0"
+                     Title="关于"
+                     ShowMinimize="False"
+                     ShowMaximize="False"
+                     ShowClose="True" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="26,6,26,0">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <!-- 与 app.ico 同一构图：渐变底 + 白卡片 + 蓝山/太阳 -->
+                    <Border Width="60" Height="60" CornerRadius="16">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#3D6EF5" Offset="0" />
+                                <GradientStop Color="#1DB4D8" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+                        <Grid>
+                            <Border Margin="11" CornerRadius="5" Background="White" />
+
+                            <Path Data="M 17,42 L 24,29 L 30,35 L 34,30 L 43,42 Z"
+                                  Fill="#2E62D6" />
+
+                            <Ellipse Width="6" Height="6"
+                                     Fill="#2E62D6"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Top"
+                                     Margin="0,19,15,0" />
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Margin="16,4,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="RePKG 提取工具"
+                                   FontSize="19"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock x:Name="VersionText"
+                                   Margin="0,4,0,0"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Margin="0,18,0,0"
+                           TextWrapping="Wrap"
+                           LineHeight="21"
+                           FontSize="12.5"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           Text="Wallpaper Engine 的 PKG / MPKG 解包与 TEX 转图片工具。解包与解码核心来自开源项目 RePKG，本程序只提供图形界面，所有解析均在本机完成。" />
+
+                <!-- ============ 支持的格式 ============ -->
+                <TextBlock Text="支持的格式"
+                           Margin="0,20,0,8"
+                           FontSize="12.5"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                <Border CornerRadius="8"
+                        Padding="14,12"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="104" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text=".pkg / .mpkg"
+                                       FontSize="12"
+                                       FontFamily="Cascadia Mono, Consolas"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="资源包，解包到同名子文件夹"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </Grid>
+                        <Grid Margin="0,0,0,9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="104" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text=".tex"
+                                       FontSize="12"
+                                       FontFamily="Cascadia Mono, Consolas"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Text="贴图容器：DXT1/3/5、RGBA8888、R8/RG88 → PNG，动图 → GIF，视频贴图 → MP4" />
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="104" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="其它文件"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Grid.Column="1"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       Text="包内的 mp4 / webm / json / bin 等一律原样导出，保留目录结构" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ============ 组件 ============ -->
+                <TextBlock Text="组件"
+                           Margin="0,16,0,8"
+                           FontSize="12.5"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                <Border CornerRadius="8"
+                        Padding="14,12"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,8">
+                            <TextBlock Text="解析核心"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                            <TextBlock Text="RePKG 0.4.0 · MIT"
+                                       FontSize="12"
+                                       HorizontalAlignment="Right"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </Grid>
+                        <Grid Margin="0,0,0,8">
+                            <TextBlock Text="界面框架"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                            <TextBlock Text="WPF-UI 4.3 · MIT"
+                                       FontSize="12"
+                                       HorizontalAlignment="Right"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </Grid>
+                        <Grid>
+                            <TextBlock Text="运行环境"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                            <TextBlock x:Name="RuntimeText"
+                                       FontSize="12"
+                                       HorizontalAlignment="Right"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" Margin="0,16,0,4">
+                    <ui:HyperlinkButton Content="RePKG 项目主页"
+                                        FontSize="12"
+                                        Padding="0"
+                                        Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                        Tag="https://github.com/notscuffed/repkg"
+                                        Click="OpenLink_Click" />
+                    <ui:HyperlinkButton Content="WPF-UI"
+                                        FontSize="12"
+                                        Margin="18,0,0,0"
+                                        Padding="0"
+                                        Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                        Tag="https://github.com/lepoco/wpfui"
+                                        Click="OpenLink_Click" />
+                    <ui:HyperlinkButton Content="MIT 许可证"
+                                        FontSize="12"
+                                        Margin="18,0,0,0"
+                                        Padding="0"
+                                        Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                        Tag="https://github.com/notscuffed/repkg/blob/master/LICENSE"
+                                        Click="OpenLink_Click" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="26,16,26,20">
+            <ui:Button Content="关闭"
+                       MinWidth="88"
+                       Appearance="Primary"
+                       Click="Close_Click" />
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

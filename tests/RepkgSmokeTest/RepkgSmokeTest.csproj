@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>RepkgSmokeTest</AssemblyName>
+        <RootNamespace>RepkgSmokeTest</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- 直接复用 GUI 工程里的真实实现，避免测试副本与产品代码漂移 -->
+        <Compile Include="..\..\src\RePkgGui\Models\AppSettings.cs" Link="Linked\AppSettings.cs" />
+        <Compile Include="..\..\src\RePkgGui\Models\LogEntry.cs" Link="Linked\LogEntry.cs" />
+        <Compile Include="..\..\src\RePkgGui\Models\RepkgOptions.cs" Link="Linked\RepkgOptions.cs" />
+        <Compile Include="..\..\src\RePkgGui\Services\RepkgService.cs" Link="Linked\RepkgService.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\lib\RePKG.Core\RePKG.Core.csproj" />
+        <ProjectReference Include="..\..\lib\RePKG.Application\RePKG.Application.csproj" />
+    </ItemGroup>
+</Project>
