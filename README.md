@@ -5,10 +5,10 @@
 [![platform](https://img.shields.io/badge/platform-Windows%2011-0078D4.svg)](#)
 
 Wallpaper Engine 的 **PKG / MPKG 解包** 与 **TEX 转图片** 图形界面。
+解析核心直接复用开源项目 [RePKG](https://github.com/notscuffed/repkg) 的 `RePKG.Core` / `RePKG.Application`，本程序只负责界面与流程编排。
 
 > **不想编译？** 直接到 [Releases](https://github.com/Qwucaksryh/RePkgGui/releases/latest) 下载
 > `RePkgGui-v1.0.0-win-x64.exe`（63 MB 自包含单文件），双击即用，无需安装 .NET。
-解析核心直接复用开源项目 [RePKG](https://github.com/notscuffed/repkg) 的 `RePKG.Core` / `RePKG.Application`，本程序只负责界面与流程编排。
 
 - 框架：WPF (.NET 10) + [WPF-UI](https://github.com/lepoco/wpfui) 4.3.0
 - 风格：Windows 11 Fluent Design，Mica 背景、圆角、深浅色自动跟随
